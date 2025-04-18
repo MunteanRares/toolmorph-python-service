@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import List
 
 class PaletteResponse(BaseModel):
-    string: list[str]
+    palettes: List[str]
