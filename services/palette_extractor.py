@@ -17,7 +17,7 @@ class PaletteExtractor:
         flags = cv.KMEANS_PP_CENTERS
         compactness, labels, centers = cv.kmeans(data, clusters, None, criteria, 15 , flags)
         rgb_values = ['#%02x%02x%02x' % tuple(np.uint8(center)) for center in centers]
-        print(rgb_values)
+
         return rgb_values
 
     @staticmethod
