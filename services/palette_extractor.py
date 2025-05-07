@@ -12,10 +12,23 @@ class PaletteExtractor:
         data = np.reshape(image_small, (width * height, 3))
         data = np.float32(data)
 
+        brightness = np.mean(data, axis=1)
+        saturation = np.max(data, axis=1) - np.min(data, axis=1)
+        mask = (brightness > 40) & (brightness < 220) & (saturation > 20)
+
+        filtered_data = data[mask]
+        if len(filtered_data) < 6:
+            # Fallback: choose 6 random colors from original data to avoid slowdown
+            if len(data) >= 6:
+                idx = np.random.choice(len(data), 6, replace=False)
+                filtered_data = data[idx]
+            else:
+                filtered_data = data
+
         clusters = 6
         criteria = (cv.TERM_CRITERIA_EPS + cv.TERM_CRITERIA_MAX_ITER, 10, 1)
         flags = cv.KMEANS_PP_CENTERS
-        compactness, labels, centers = cv.kmeans(data, clusters, None, criteria, 15 , flags)
+        compactness, labels, centers = cv.kmeans(filtered_data, clusters, None, criteria, 15 , flags)
         rgb_values = ['#%02x%02x%02x' % tuple(np.uint8(center)) for center in centers]
 
         return rgb_values
