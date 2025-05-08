@@ -31,8 +31,6 @@ class PaletteExtractor:
     @staticmethod
     def _prioritize_distant_colors(centers, data):
         mean_color = np.mean(data, axis=0)
-        print(mean_color)
-        print(centers)
         distances = distance.cdist(centers, np.reshape(mean_color,(1, -1))).flatten()
         saturations = np.max(centers, axis=1) - np.min(centers, axis=1)
         scores = distances * saturations
@@ -82,14 +80,3 @@ class PaletteExtractor:
                 filtered_data = data
 
         return filtered_data
-
-
-    # @staticmethod
-    # def _crop_image_aspect_ratio(img, width = 600):
-    #     desired_width = width
-    #     aspect_ratio = desired_width / img.shape[1]
-    #     desired_height = int(img.shape[0] * aspect_ratio)
-    #
-    #     dimensions = (desired_width, desired_height)
-    #     resized_image = cv.resize(img, dsize=dimensions, interpolation=cv.INTER_AREA)
-    #     return resized_image

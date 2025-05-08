@@ -1,3 +1,4 @@
+import io
 import cv2 as cv
 import numpy as np
 import torch
@@ -14,7 +15,7 @@ class BackgroundRemover:
         self.image_pil = Image.fromarray(self.image_rgb)
 
         self.model = U2NET()
-        self.model.load_state_dict(torch.load("/models/u2net.pth"))
+        self.model.load_state_dict(torch.load("u2net.pth"))
         self.model.eval()
 
         self.transform = transforms.Compose([
@@ -42,12 +43,9 @@ class BackgroundRemover:
         alpha_mask = (grabcut_mask2 * 255).astype(np.uint8)
         final_image_bgra[:, :, 3] = alpha_mask
 
-        output_path = "output_image.png"
-        cv.imwrite(output_path, final_image_bgra)
-
-        # cv.imshow("Masked Image", final_masked_image)
-        # cv.waitKey(0)
-        # cv.destroyAllWindows()
+        _, buffer = cv.imencode(".png", final_image_bgra)
+        byte_stream = io.BytesIO(buffer)
+        return byte_stream
 
     def initializing_u2net_model(self):
         image_tensor = self.transform(self.image_pil).unsqueeze(0)
@@ -80,8 +78,3 @@ class BackgroundRemover:
         kernel = np.ones((3, 3), np.uint8)
         edge_mask = cv.erode(edge_mask, kernel, iterations=1)
         return edge_mask
-
-# # bgrem = BackgroundRemover("D:/A.Projects/PROJECTS-PYTHON/PROJECTS-PYCHARM/toolmorph-python-service/IMG_2699.JPG")
-# # bgrem = BackgroundRemover("D:/A.Projects/PROJECTS-PYTHON/PROJECTS-PYCHARM/toolmorph-python-service/Dacia Front (Crop 1)-3.jpg")
-bgrem = BackgroundRemover("D:/A.Projects/PROJECTS-PYTHON/PROJECTS-PYCHARM/toolmorph-python-service/Dacia Logan - nice-1.jpg")
-bgrem.detect_object()
