@@ -1,8 +1,8 @@
 import cv2 as cv
 import numpy as np
-from patsy.state import center
+from helpers.image_manipulation import crop_image_aspect_ratio
 from scipy.spatial import distance
-import matplotlib.pyplot as plt
+
 
 class PaletteExtractor:
     def __init__(self, image):
@@ -10,7 +10,7 @@ class PaletteExtractor:
         self.image_rgb = cv.cvtColor(self.image, cv.COLOR_BGR2RGB)
 
     def extract_palette(self):
-        image_small = self._crop_image_aspect_ratio(self.image_rgb, 300)
+        image_small = crop_image_aspect_ratio(self.image_rgb, 300)
         height, width, color_amount = np.shape(image_small)
         data = np.reshape(image_small, (width * height, 3))
         data = np.float32(data)
@@ -84,12 +84,12 @@ class PaletteExtractor:
         return filtered_data
 
 
-    @staticmethod
-    def _crop_image_aspect_ratio(img, width = 600):
-        desired_width = width
-        aspect_ratio = desired_width / img.shape[1]
-        desired_height = int(img.shape[0] * aspect_ratio)
-
-        dimensions = (desired_width, desired_height)
-        resized_image = cv.resize(img, dsize=dimensions, interpolation=cv.INTER_AREA)
-        return resized_image
+    # @staticmethod
+    # def _crop_image_aspect_ratio(img, width = 600):
+    #     desired_width = width
+    #     aspect_ratio = desired_width / img.shape[1]
+    #     desired_height = int(img.shape[0] * aspect_ratio)
+    #
+    #     dimensions = (desired_width, desired_height)
+    #     resized_image = cv.resize(img, dsize=dimensions, interpolation=cv.INTER_AREA)
+    #     return resized_image
