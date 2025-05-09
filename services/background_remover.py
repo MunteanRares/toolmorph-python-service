@@ -15,7 +15,7 @@ class BackgroundRemover:
         self.image_pil = Image.fromarray(self.image_rgb)
 
         self.model = U2NET()
-        self.model.load_state_dict(torch.load("U_2NET/saved_models/u2net/u2net.pth"))
+        self.model.load_state_dict(torch.load("u2net.pth"))
         self.model.eval()
 
         self.transform = transforms.Compose([
