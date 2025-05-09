@@ -1,0 +1,3 @@
+[submodule "U_2_NET"]
+	path = U_2_NET
+	url = https://github.com/NathanUA/U-2-Net.git
