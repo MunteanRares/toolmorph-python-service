@@ -3,7 +3,7 @@ import cv2 as cv
 import numpy as np
 import torch
 from PIL import Image
-from U_2_Net.model.u2net import U2NET
+from U_2NET.model.u2net import U2NET
 from helpers.image_manipulation import crop_image_aspect_ratio
 import torchvision.transforms as transforms
 
@@ -15,7 +15,7 @@ class BackgroundRemover:
         self.image_pil = Image.fromarray(self.image_rgb)
 
         self.model = U2NET()
-        self.model.load_state_dict(torch.load("u2net.pth"))
+        self.model.load_state_dict(torch.load("U_2NET/saved_models/u2net/u2net.pth"))
         self.model.eval()
 
         self.transform = transforms.Compose([
