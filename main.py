@@ -4,6 +4,7 @@ import uvicorn
 from fastapi import FastAPI, UploadFile, File
 from starlette.responses import StreamingResponse
 
+from services.object_detection.object_detection import ObjectDetection
 from services.palette_extractor import PaletteExtractor
 from services.background_remover import BackgroundRemover
 from models.palette_model import PaletteResponse
@@ -39,7 +40,23 @@ async def remove_background(file: UploadFile = File(...)):
     finally:
         os.remove(tmp_name)
 
-    return StreamingResponse(byte_stream, media_type="image/png")
+    return StreamingResponse(byte_stream, media_type="image/jpg")
+
+@app.post("/object-detection")
+async def detect_object(file: UploadFile = File(...)):
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".jpg") as tmp:
+        tmp_name = tmp.name
+        file_content = await file.read()
+        tmp.write(file_content)
+
+    try:
+        object_detection = ObjectDetection(tmp_name)
+        objects = await asyncio.to_thread(object_detection.guess_image)
+
+    finally:
+        os.remove(tmp_name)
+
+    return objects
 
 if __name__ == "__main__":
     uvicorn.run(

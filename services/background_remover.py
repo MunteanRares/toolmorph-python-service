@@ -3,7 +3,7 @@ import cv2 as cv
 import numpy as np
 import torch
 from PIL import Image
-from U_2NET.model.u2net import U2NET
+from U_2_Net.model.u2net import U2NET
 from helpers.image_manipulation import crop_image_aspect_ratio
 import torchvision.transforms as transforms
 
